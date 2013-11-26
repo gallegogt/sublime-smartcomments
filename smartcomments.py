@@ -57,6 +57,7 @@ class SmartCommentsTextCommand(sublime_plugin.TextCommand):
         file_name = self.view.file_name()
         if not file_name or not str(file_name).endswith("js"):
             return
+
         selection = self.view.sel()
         for region in selection:
             if not region.empty():
