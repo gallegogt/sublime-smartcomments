@@ -4,7 +4,13 @@ from io import open as io_open
 from os import remove
 from os.path import dirname as path_dirname
 from tempfile import mkstemp
+import platform
 
+def get_command():
+    command = "smartcomments"
+    if platform.system() == "Windows":
+        command = "smartcomments.cmd"
+    return command 
 
 def fn_execute(cmd_args=[], cmd=None):
     """
@@ -34,7 +40,7 @@ class SmartCommentsFolderCommand(sublime_plugin.TextCommand):
             return
 
         file_dir = path_dirname(file_name)
-        result = fn_execute(["smartcomments", "-g", file_dir])
+        result = fn_execute([get_command(), "-g","-t", file_dir])
         print(result)
 
 
@@ -46,7 +52,7 @@ class SmartCommentsFileCommand(sublime_plugin.TextCommand):
         if not file_name or not str(file_name).endswith("js"):
             return
 
-        result = fn_execute(["smartcomments", "-g", "-t", file_name])
+        result = fn_execute([get_command(), "-g", "-t", file_name])
         print(result)
 
 
@@ -66,7 +72,7 @@ class SmartCommentsTextCommand(sublime_plugin.TextCommand):
                 with io_open(js_tmpfile[1], 'w+') as tmpf:
                     tmpf.write(s)
                 try:
-                    fn_execute(["smartcomments", "-g", "-t", js_tmpfile[1]])
+                    fn_execute([get_command(), "-g", "-t", js_tmpfile[1]])
                 except:
                     remove(js_tmpfile[1])
                 with io_open(js_tmpfile[1], 'r') as tmpf:
